@@ -50,7 +50,7 @@ const Login = () => {
         });
 
         setTimeout(() => {
-          navigate("/dashboard");
+          navigate("/");
         }, 1500);
       }
     } catch (error) {

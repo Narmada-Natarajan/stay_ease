@@ -1,6 +1,7 @@
 import express from "express";
 import {User} from "../models/user.models.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export const userLogin=async (req,res)=>{
 
@@ -33,9 +34,22 @@ export const userLogin=async (req,res)=>{
             })
         }
 
+        const payload={
+            email:email,
+            password:userFound.password
+        };
+
+        const token=jwt.sign(payload,process.env.JWTKEY,{
+            expiresIn:"2d"
+        }
+        );
+        
         return res.status(200).json({
+
             success:true,
-            message:"Login successfull"
+            message:"Login Successfull",
+            token
+
         })
 
     }
