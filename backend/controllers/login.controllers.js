@@ -35,8 +35,7 @@ export const userLogin=async (req,res)=>{
         }
 
         const payload={
-            email:email,
-            password:userFound.password
+            email:userFound.email,
         };
 
         const token=jwt.sign(payload,process.env.JWTKEY,{

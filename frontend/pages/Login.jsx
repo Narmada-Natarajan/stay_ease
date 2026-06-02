@@ -27,6 +27,7 @@ const Login = () => {
     e.preventDefault();
 
     setMessage("");
+    setError(false)
 
     try {
       setLoading(true);
