@@ -1,17 +1,15 @@
 import { Property } from "../models/property.models.js";
 
-export const getProperties=async(req,res)=>{
+export const addProperty=async(req,res)=>{
 
     try{
 
-        const properties=await Property.find();
+        const addHome=Property.create();
 
         return res.status(200).json({
 
             success:true,
-            properties,
-            
-            
+            message:"Property added successfully"
         });
 
     }catch(error){
@@ -20,8 +18,6 @@ export const getProperties=async(req,res)=>{
 
             success:false,
             message:error.message
-
-
         });
     }
 };
