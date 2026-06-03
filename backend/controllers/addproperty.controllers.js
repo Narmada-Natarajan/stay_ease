@@ -4,12 +4,14 @@ export const addProperty=async(req,res)=>{
 
     try{
 
-        const addHome=Property.create();
+        const addHome=await Property.create(req.body);
 
         return res.status(200).json({
 
             success:true,
-            message:"Property added successfully"
+            message:"Property added successfully",
+            Property:addHome,
+
         });
 
     }catch(error){

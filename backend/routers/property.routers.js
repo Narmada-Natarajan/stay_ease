@@ -4,7 +4,7 @@ import { addProperty } from "../controllers/addproperty.controllers.js";
 
 const router = express.Router();
 
-router.post("/all", getProperties);
+router.get("/all", getProperties);
 router.post("/add",addProperty);
 
 export default router;
