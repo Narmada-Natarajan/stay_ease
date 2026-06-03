@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import authRoutes from "./routers/auth.routers.js"
 import cors  from "cors";
 import propertyRoutes from "./routers/property.routers.js"
+import cloudinary from "./config/cloudinary.config.js";
 
 dotenv.config();
 

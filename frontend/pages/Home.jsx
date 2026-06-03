@@ -1,39 +1,44 @@
-import React from "react";
+import { useState , useEffect } from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import {
   FaHome,
   FaShieldAlt,
   FaMapMarkerAlt,
   FaMoneyBillWave,
+  FaBed,
+  FaBath,
+  FaRulerCombined,
+  FaHeart,
+  FaStar,
 } from "react-icons/fa";
 
 const Home = () => {
-  const properties = [
-    {
-      id: 1,
-      title: "Modern Smart Villa",
-      location: "Bhopal, India",
-      price: "₹18,000/month",
-      image:
-        "https://images.unsplash.com/photo-1568605114967-8130f3a36994",
-    },
-    {
-      id: 2,
-      title: "Luxury Apartment",
-      location: "Bangalore, India",
-      price: "₹22,000/month",
-      image:
-        "https://images.unsplash.com/photo-1494526585095-c41746248156",
-    },
-    {
-      id: 3,
-      title: "Premium Family Home",
-      location: "Delhi, India",
-      price: "₹28,000/month",
-      image:
-        "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
-    },
-  ];
+
+  const [loading, setLoading] = useState(true);
+
+  const [properties,setProperties]=useState([]);
+
+  const fetchProperties = async () => {
+  try {
+    const { data } = await axios.get(
+      "http://localhost:5000/api/property/all"
+    );
+
+    if (data.success) {
+      setProperties(data.properties);
+    }
+  } catch (error) {
+    console.log(error);
+  } finally {
+    setLoading(false);
+  }
+};
+
+  useEffect(()=>{
+    fetchProperties();
+  },
+  []);
 
   return (
     <div className="bg-white min-h-screen">
@@ -105,6 +110,11 @@ const Home = () => {
           </div>
         </div>
       </section>
+      {loading && (
+  <h3 className="text-center text-gray-500 text-lg">
+    Loading Properties...
+  </h3>
+)}
 
       {/* Featured Properties */}
       <section
@@ -121,38 +131,97 @@ const Home = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {properties.map((property) => (
-            <div
-              key={property.id}
-              className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-300"
-            >
-              <img
-                src={property.image}
-                alt={property.title}
-                className="h-64 w-full object-cover"
-              />
+        {properties.length === 0 ? (
+  <p className="text-center text-gray-500 text-lg">
+    No Properties Found
+  </p>
+) : (
+  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+    {properties.map((property) => (
+      <div
+        key={property._id}
+        className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300"
+      >
+        {/* Image */}
+        <div className="relative">
+          <img
+            src={property.image}
+            alt={property.title}
+            className="h-64 w-full object-cover"
+          />
 
-              <div className="p-6">
-                <h3 className="text-xl font-bold">
-                  {property.title}
-                </h3>
+          <button className="absolute top-4 right-4 bg-white p-3 rounded-full shadow-md hover:text-red-500 transition">
+            <FaHeart />
+          </button>
 
-                <p className="text-gray-500 mt-2">
-                  {property.location}
-                </p>
-
-                <p className="text-indigo-600 font-bold text-lg mt-4">
-                  {property.price}
-                </p>
-
-                <button className="mt-5 w-full bg-indigo-600 text-white py-3 rounded-xl hover:bg-indigo-700 transition">
-                  View Details
-                </button>
-              </div>
-            </div>
-          ))}
+          <div className="absolute bottom-4 left-4 bg-indigo-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+            Featured
+          </div>
         </div>
+
+        {/* Content */}
+        <div className="p-6">
+          <div className="flex justify-between items-start">
+            <h3 className="text-xl font-bold text-gray-800">
+              {property.title}
+            </h3>
+
+            <div className="flex items-center gap-1 text-yellow-500">
+              <FaStar />
+              <span className="text-sm font-medium text-gray-700">
+                4.8
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center mt-3 text-gray-500">
+            <FaMapMarkerAlt className="mr-2 text-indigo-600" />
+            {property.location}
+          </div>
+
+          <div className="grid grid-cols-3 gap-4 mt-5 text-sm text-gray-600">
+            <div className="flex items-center gap-2">
+              <FaBed className="text-indigo-600" />
+              <span>{property.bedrooms}</span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <FaBath className="text-indigo-600" />
+              <span>{property.bathrooms}</span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <FaRulerCombined className="text-indigo-600" />
+              <span>{property.area}</span>
+            </div>
+          </div>
+
+          <div className="mt-4">
+            <p className="text-gray-500 text-sm line-clamp-2">
+              {property.description}
+            </p>
+          </div>
+
+          <div className="flex justify-between items-center mt-6">
+            <div>
+              <h4 className="text-2xl font-bold text-indigo-600">
+                ₹{property.price}
+              </h4>
+
+              <p className="text-sm text-gray-500">
+                per month
+              </p>
+            </div>
+
+            <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-xl transition">
+              View Details
+            </button>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+)}
       </section>
 
       {/* Features */}

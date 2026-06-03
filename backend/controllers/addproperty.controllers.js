@@ -1,25 +1,41 @@
 import { Property } from "../models/property.models.js";
+import cloudinary from "../config/cloudinary.config.js";
 
-export const addProperty=async(req,res)=>{
+export const addProperty = async (req, res) => {
+  try {
+    const {
+      title,
+      location,
+      price,
+      bedrooms,
+      bathrooms,
+      area,
+      description,
+    } = req.body;
 
-    try{
+    const result = await cloudinary.uploader.upload(
+      req.file.path
+    );
 
-        const addHome=await Property.create(req.body);
+    const property = await Property.create({
+      title,
+      location,
+      price,
+      bedrooms,
+      bathrooms,
+      area,
+      description,
+      image: result.secure_url,
+    });
 
-        return res.status(200).json({
-
-            success:true,
-            message:"Property added successfully",
-            Property:addHome,
-
-        });
-
-    }catch(error){
-
-        return res.status(500).json({
-
-            success:false,
-            message:error.message
-        });
-    }
+    return res.status(201).json({
+      success: true,
+      property,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
