@@ -1,4 +1,4 @@
-import { useState , useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import {
@@ -15,32 +15,36 @@ import {
 
 const Home = () => {
 
+  const token = localStorage.getItem("token");
+
   const [loading, setLoading] = useState(true);
 
-  const [properties,setProperties]=useState([]);
+  const [properties, setProperties] = useState([]);
 
   const fetchProperties = async () => {
-  try {
-    const { data } = await axios.get(
-      "http://localhost:5000/api/property/all"
-    );
+    try {
+      const { data } = await axios.get(
+        "http://localhost:5000/api/property/all"
+      );
 
-    if (data.success) {
-      setProperties(data.properties);
+      if (data.success) {
+        setProperties(data.properties);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.log(error);
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchProperties();
   },
-  []);
+    []);
 
   return (
+
+
     <div className="bg-white min-h-screen">
       {/* Navbar */}
       <nav className="fixed top-0 left-0 w-full z-50 backdrop-blur-lg bg-white/80 border-b border-gray-200">
@@ -48,6 +52,7 @@ const Home = () => {
           <h1 className="text-2xl font-bold text-indigo-600">
             Stay Ease
           </h1>
+          
 
           <div className="hidden md:flex gap-8 text-gray-700 font-medium">
             <a href="#home">Home</a>
@@ -57,20 +62,34 @@ const Home = () => {
           </div>
 
           <div className="flex gap-3">
-            <Link
-              to="/login"
-              className="px-5 py-2 border border-indigo-600 text-indigo-600 rounded-lg hover:bg-indigo-50 transition"
-            >
-              Login
-            </Link>
+  {token ? (
+    <button
+      onClick={() => {
+        localStorage.removeItem("token");
+        navigate("/");
+      }}
+      className="px-5 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+    >
+      Logout
+    </button>
+  ) : (
+    <>
+      <Link
+        to="/login"
+        className="px-5 py-2 border border-indigo-600 text-indigo-600 rounded-lg hover:bg-indigo-50 transition"
+      >
+        Login
+      </Link>
 
-            <Link
-              to="/register"
-              className="px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
-            >
-              Register
-            </Link>
-          </div>
+      <Link
+        to="/register"
+        className="px-5 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+      >
+        Register
+      </Link>
+    </>
+  )}
+</div>
         </div>
       </nav>
 
@@ -110,11 +129,19 @@ const Home = () => {
           </div>
         </div>
       </section>
-      {loading && (
-  <h3 className="text-center text-gray-500 text-lg">
-    Loading Properties...
-  </h3>
-)}
+      {loading ? (
+        <p className="text-center text-gray-500 text-lg">
+          Loading Properties...
+        </p>
+      ) : properties.length === 0 ? (
+        <p className="text-center text-gray-500 text-lg">
+          No Properties Found
+        </p>
+      ) : (
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* map here */}
+        </div>
+      )}
 
       {/* Featured Properties */}
       <section
@@ -132,96 +159,99 @@ const Home = () => {
         </div>
 
         {properties.length === 0 ? (
-  <p className="text-center text-gray-500 text-lg">
-    No Properties Found
-  </p>
-) : (
-  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-    {properties.map((property) => (
-      <div
-        key={property._id}
-        className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300"
-      >
-        {/* Image */}
-        <div className="relative">
-          <img
-            src={property.image}
-            alt={property.title}
-            className="h-64 w-full object-cover"
-          />
+          <p className="text-center text-gray-500 text-lg">
+            No Properties Found
+          </p>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {properties.map((property) => (
+              <div
+                key={property._id}
+                className="bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300"
+              >
+                {/* Image */}
+                <div className="relative">
+                  <img
+                    src={property.image}
+                    alt={property.title}
+                    className="h-64 w-full object-cover"
+                  />
 
-          <button className="absolute top-4 right-4 bg-white p-3 rounded-full shadow-md hover:text-red-500 transition">
-            <FaHeart />
-          </button>
+                  <button className="absolute top-4 right-4 bg-white p-3 rounded-full shadow-md hover:text-red-500 transition">
+                    <FaHeart />
+                  </button>
 
-          <div className="absolute bottom-4 left-4 bg-indigo-600 text-white px-3 py-1 rounded-full text-sm font-medium">
-            Featured
+                  <div className="absolute bottom-4 left-4 bg-indigo-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                    Featured
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="p-6">
+                  <div className="flex justify-between items-start">
+                    <h3 className="text-xl font-bold text-gray-800">
+                      {property.title}
+                    </h3>
+
+                    <div className="flex items-center gap-1 text-yellow-500">
+                      <FaStar />
+                      <span className="text-sm font-medium text-gray-700">
+                        4.8
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center mt-3 text-gray-500">
+                    <FaMapMarkerAlt className="mr-2 text-indigo-600" />
+                    {property.location}
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4 mt-5 text-sm text-gray-600">
+                    <div className="flex items-center gap-2">
+                      <FaBed className="text-indigo-600" />
+                      <span>{property.bedrooms}</span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <FaBath className="text-indigo-600" />
+                      <span>{property.bathrooms}</span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <FaRulerCombined className="text-indigo-600" />
+                      <span>{property.area} sq.ft</span>
+                    </div>
+                  </div>
+
+                  <div className="mt-4">
+                    <p className="text-gray-500 text-sm line-clamp-2">
+                      {property.description}
+                    </p>
+                  </div>
+
+                  <div className="flex justify-between items-center mt-6">
+                    <div>
+                      <h4 className="text-2xl font-bold text-indigo-600">
+                        ₹{property.price}
+                      </h4>
+
+                      <p className="text-sm text-gray-500">
+                        per month
+                      </p>
+                    </div>
+
+                    <Link
+                      to={`/property/${property._id}`}
+                      className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-xl transition"
+                    >
+                      View Details
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-        </div>
-
-        {/* Content */}
-        <div className="p-6">
-          <div className="flex justify-between items-start">
-            <h3 className="text-xl font-bold text-gray-800">
-              {property.title}
-            </h3>
-
-            <div className="flex items-center gap-1 text-yellow-500">
-              <FaStar />
-              <span className="text-sm font-medium text-gray-700">
-                4.8
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center mt-3 text-gray-500">
-            <FaMapMarkerAlt className="mr-2 text-indigo-600" />
-            {property.location}
-          </div>
-
-          <div className="grid grid-cols-3 gap-4 mt-5 text-sm text-gray-600">
-            <div className="flex items-center gap-2">
-              <FaBed className="text-indigo-600" />
-              <span>{property.bedrooms}</span>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <FaBath className="text-indigo-600" />
-              <span>{property.bathrooms}</span>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <FaRulerCombined className="text-indigo-600" />
-              <span>{property.area}</span>
-            </div>
-          </div>
-
-          <div className="mt-4">
-            <p className="text-gray-500 text-sm line-clamp-2">
-              {property.description}
-            </p>
-          </div>
-
-          <div className="flex justify-between items-center mt-6">
-            <div>
-              <h4 className="text-2xl font-bold text-indigo-600">
-                ₹{property.price}
-              </h4>
-
-              <p className="text-sm text-gray-500">
-                per month
-              </p>
-            </div>
-
-            <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-xl transition">
-              View Details
-            </button>
-          </div>
-        </div>
-      </div>
-    ))}
-  </div>
-)}
+        )}
       </section>
 
       {/* Features */}

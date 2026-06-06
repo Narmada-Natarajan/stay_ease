@@ -1,62 +1,70 @@
-import {User} from "../models/user.models.js";
+import { User } from "../models/user.models.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-export const userLogin=async (req,res)=>{
+export const userLogin = async (req, res) => {
 
-    try{
+    try {
 
-        const {email,password}=req.body;
+        const { email, password } = req.body;
 
-        if(!email||!password){
+        if (!email || !password) {
             return res.status(400).json({
-                success:false,
-                message:"Details Missing"
+                success: false,
+                message: "Details Missing"
             })
         }
 
-        const userFound=await User.findOne({email});
+        const userFound = await User.findOne({ email });
 
-        if(!userFound){
+        if (!userFound) {
             return res.status(404).json({
-                success:false,
-                message:"User not found"
+                success: false,
+                message: "User not found"
             })
         }
 
-        const passMatch=await bcrypt.compare(password,userFound.password);
+        const passMatch = await bcrypt.compare(password, userFound.password);
 
-        if(!passMatch){
+        if (!passMatch) {
             return res.status(400).json({
-                success:false,
-                message:"Invalid email id or password"
+                success: false,
+                message: "Invalid email id or password"
             })
         }
 
-        const payload={
-            email:userFound.email,
+        const payload = {
+            id: userFound._id,
+            email: userFound.email,
         };
 
-        const token=jwt.sign(payload,process.env.JWTKEY,{
-            expiresIn:"2d"
+        const token = jwt.sign(payload, process.env.JWTKEY, {
+            expiresIn: "2d"
         }
         );
-        
+
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "lax",
+            path: "/",
+            maxAge: 2 * 24 * 60 * 60 * 1000,
+        });
+
         return res.status(200).json({
 
-            success:true,
-            message:"Login Successfull",
-            token
+            success: true,
+            message: "Login Successfull",
 
         })
 
     }
-    catch(error){
+    catch (error) {
         console.log(error.message);
 
         return res.status(500).json({
-            success:false,
-            message:error.message
+            success: false,
+            message: error.message
         })
     }
 

@@ -5,6 +5,7 @@ import authRoutes from "./routers/auth.routers.js"
 import cors  from "cors";
 import propertyRoutes from "./routers/property.routers.js"
 import cloudinary from "./config/cloudinary.config.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -14,10 +15,14 @@ const server=express();
 const PORT=process.env.PORT||5000;
 
 //middlewares
-server.use(cors());
+server.use(cors({
+    origin:"http://localhost:5173",
+    credentials:true
+}));
+
+server.use(cookieParser());
 
 server.use(express.json());
-
 server.use("/api/auth",authRoutes);
 server.use("/api/property",propertyRoutes);
 
