@@ -26,6 +26,7 @@ export const addProperty = async (req, res) => {
       area,
       description,
       image: result.secure_url,
+      owner: req.user._id
     });
 
     return res.status(201).json({

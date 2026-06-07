@@ -8,6 +8,11 @@ import { authMiddleware } from "../middlewares/auth.middlewares.js";
 const router = express.Router();
 
 router.get("/all", getProperties);
-router.post("/add",upload.single("image"),authMiddleware,addProperty);
+router.post(
+  "/add",
+  authMiddleware,
+  upload.single("image"),
+  addProperty
+);
 
 export default router;
