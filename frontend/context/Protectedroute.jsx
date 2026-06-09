@@ -4,10 +4,13 @@ import { Navigate, Outlet } from "react-router-dom";
 
 const Protectedroute = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
+        console.log("ProtectedRoute checking auth");
+
         const response = await axios.get(
           "http://localhost:5000/api/auth/me",
           {
@@ -16,10 +19,12 @@ const Protectedroute = () => {
         );
 
         if (response.data.verified) {
-          setIsLoggedIn(true);
+          setUser(response.data.user);
+          setIsLoggedIn(true);      // ← MISSING
         } else {
           setIsLoggedIn(false);
         }
+
       } catch (error) {
         console.log("Auth Error:", error.response?.data);
         setIsLoggedIn(false);

@@ -62,12 +62,16 @@ const Home = () => {
   useEffect(() => {
   const checkAuth = async () => {
     try {
+      console.log("Home checking auth");
+      
       const { data } = await axios.get(
         "http://localhost:5000/api/auth/me",
         {
           withCredentials: true,
         }
       );
+
+      console.log("ME RESPONSE:", data);
 
       if (data.verified) {
         setUser(data.user);

@@ -7,7 +7,7 @@ export const authMiddleware = async (req, res, next) => {
 
     
     try {
-        
+        console.log("Header Cookie:", req.headers.cookie);
         console.log("Cookies:", req.cookies);
 
 
@@ -20,11 +20,12 @@ export const authMiddleware = async (req, res, next) => {
         }
         
         const decoded = jwt.verify(token, process.env.JWTKEY);
-        console.log(decoded);
+        console.log("decoded:", decoded);
 
 
 
         const user = await User.findById(decoded.id);
+        console.log("User:", user);
         
 
         if (!user) {

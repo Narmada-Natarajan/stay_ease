@@ -1,155 +1,180 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
-import axios from "axios";
+import {
+  FaEnvelope,
+  FaLock,
+  FaEye,
+  FaEyeSlash,
+  FaHome,
+  FaShieldAlt,
+  FaMapMarkerAlt,
+} from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Login = () => {
-  const navigate = useNavigate();
-
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-
   const [showPassword, setShowPassword] = useState(false);
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    setMessage("");
-    setError(false)
-
-    try {
-      setLoading(true);
-
-      const { data } = await axios.post("http://localhost:5000/api/auth/login",
-        {
-          email: formData.email,
-          password: formData.password,
-        },
-        {
-          withCredentials: true
-        }
-      );
-
-      if (data.success) {
-        setError(false);
-        setMessage(data.message || "Login Successful");
-
-        setFormData({
-          email: "",
-          password: "",
-        });
-
-        setTimeout(() => {
-          navigate("/");
-        }, 1500);
-      }
-    } catch (error) {
-      setError(true);
-      setMessage(
-        error.response?.data?.message || "Invalid Credentials"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl p-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">
-            Welcome Back
-          </h1>
+    <div className="min-h-screen bg-slate-100 flex items-center justify-center p-6">
+      <div className="w-full max-w-7xl bg-white rounded-[40px] overflow-hidden shadow-2xl grid lg:grid-cols-2">
 
-          <p className="text-gray-500 mt-2">
-            Login to Get your Dream Home
-          </p>
+        {/* Left Image Section */}
+        <div className="relative hidden lg:block">
+          <img
+            src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750"
+            alt="house"
+            className="h-full w-full object-cover"
+          />
+
+          <div className="absolute inset-0 bg-black/50"></div>
+
+          <div className="absolute inset-0 p-12 flex flex-col justify-between text-white">
+            <div>
+              <h1 className="text-5xl font-bold">Stay Ease</h1>
+
+              <p className="mt-4 text-lg text-gray-200">
+                Find your dream home with comfort and style.
+              </p>
+            </div>
+
+            <div className="space-y-6">
+
+              <div className="flex items-center gap-4">
+                <div className="bg-white/20 p-4 rounded-2xl">
+                  <FaHome size={22} />
+                </div>
+
+                <div>
+                  <h3 className="font-semibold">Modern Homes</h3>
+                  <p className="text-sm text-gray-200">
+                    Luxury spaces designed for comfort.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <div className="bg-white/20 p-4 rounded-2xl">
+                  <FaShieldAlt size={22} />
+                </div>
+
+                <div>
+                  <h3 className="font-semibold">Secure Booking</h3>
+                  <p className="text-sm text-gray-200">
+                    Trusted and verified properties.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <div className="bg-white/20 p-4 rounded-2xl">
+                  <FaMapMarkerAlt size={22} />
+                </div>
+
+                <div>
+                  <h3 className="font-semibold">Prime Locations</h3>
+                  <p className="text-sm text-gray-200">
+                    Homes in the best neighborhoods.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          </div>
         </div>
 
-        {message && (
-          <div
-            className={`mb-4 px-4 py-2 rounded-lg text-sm font-medium ${error
-              ? "bg-red-50 text-red-600 border border-red-200"
-              : "bg-green-50 text-green-600 border border-green-200"
-              }`}
-          >
-            {message}
-          </div>
-        )}
+        {/* Right Form Section */}
+        <div className="bg-gray-50 flex items-center justify-center px-8 py-12">
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="w-full max-w-md">
 
-          {/* Email */}
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Email Address
-            </label>
+            <h1 className="text-4xl font-bold text-gray-800">
+              Welcome Back
+            </h1>
 
-            <div className="flex items-center border rounded-xl px-4 py-3">
-              <FaEnvelope className="text-gray-400 mr-3" />
+            <p className="text-gray-500 mt-3">
+              Login to continue your journey.
+            </p>
 
-              <input
-                type="email"
-                name="email"
-                placeholder="Enter your email"
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full outline-none"
-                required
-              />
-            </div>
-          </div>
+            <form className="mt-10 space-y-6">
 
-          {/* Password */}
-          <div>
-            <label className="block text-sm font-medium mb-2">
-              Password
-            </label>
+              <div>
+                <label className="text-sm font-medium text-gray-700">
+                  Email
+                </label>
 
-            <div className="flex items-center border rounded-xl px-4 py-3">
-              <FaLock className="text-gray-400 mr-3" />
+                <div className="mt-2 bg-white border rounded-2xl flex items-center px-5 py-4">
+                  <FaEnvelope className="text-gray-400 mr-3" />
 
-              <input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                placeholder="Enter password"
-                value={formData.password}
-                onChange={handleChange}
-                className="w-full outline-none"
-                required
-              />
+                  <input
+                    type="email"
+                    placeholder="Enter email"
+                    className="w-full outline-none bg-transparent"
+                  />
+                </div>
+              </div>
 
-              <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-gray-500">{showPassword ? (<FaEyeSlash />) : (<FaEye />
-              )}
+              <div>
+                <label className="text-sm font-medium text-gray-700">
+                  Password
+                </label>
+
+                <div className="mt-2 bg-white border rounded-2xl flex items-center px-5 py-4">
+                  <FaLock className="text-gray-400 mr-3" />
+
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter password"
+                    className="w-full outline-none bg-transparent"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <FaEyeSlash className="text-gray-400" />
+                    ) : (
+                      <FaEye className="text-gray-400" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <button
+                className="
+                w-full
+                bg-indigo-600
+                hover:bg-indigo-700
+                text-white
+                py-4
+                rounded-2xl
+                font-semibold
+                transition
+                duration-300
+                hover:scale-[1.02]
+                "
+              >
+                Login
               </button>
-            </div>
+
+            </form>
+
+            <p className="text-center mt-8 text-gray-500">
+              Don't have an account?{" "}
+              <Link
+                to="/register"
+                className="text-indigo-600 font-semibold"
+              >
+                Register
+              </Link>
+            </p>
+
           </div>
+        </div>
 
-          <button type="submit" disabled={loading} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-semibold transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
-            {loading ? "Logging In..." : "Login"}
-          </button>
-
-        </form>
-
-        <p className="text-center text-gray-600 mt-6">
-          Don't have an account?{" "}
-          <Link to="/register" className="text-indigo-600 font-semibold hover:underline">Register</Link>
-        </p>
       </div>
     </div>
   );
 };
 
 export default Login;
+
