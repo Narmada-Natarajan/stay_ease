@@ -3,6 +3,14 @@ import cloudinary from "../config/cloudinary.config.js";
 
 export const addProperty = async (req, res) => {
   try {
+
+    if (req.user.role !== "owner") {
+      return res.status(403).json({
+        success: false,
+        message: "Only owners can add properties"
+      });
+    }
+
     const {
       title,
       location,
@@ -33,6 +41,7 @@ export const addProperty = async (req, res) => {
       success: true,
       property,
     });
+
   } catch (error) {
     return res.status(500).json({
       success: false,

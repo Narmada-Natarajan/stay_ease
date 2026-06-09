@@ -8,6 +8,7 @@ const Register = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    role: "tenant",
     password: "",
     confirmPassword: "",
   });
@@ -45,6 +46,7 @@ const Register = () => {
           name: formData.name,
           email: formData.email,
           password: formData.password,
+          role: formData.role,
         }
       );
 
@@ -87,8 +89,8 @@ const Register = () => {
         {message && (
           <div
             className={`mb-4 px-4 py-2 rounded-lg text-sm font-medium ${error
-                ? "bg-red-50 text-red-600 border border-red-200"
-                : "bg-green-50 text-green-600 border border-green-200"
+              ? "bg-red-50 text-red-600 border border-red-200"
+              : "bg-green-50 text-green-600 border border-green-200"
               }`}
           >
             {message}
@@ -134,6 +136,21 @@ const Register = () => {
                 required
               />
             </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">
+              Register As
+            </label>
+
+            <select
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              className="w-full border rounded-xl px-4 py-3"
+            >
+              <option value="tenant">Tenant</option>
+              <option value="owner">Owner</option>
+            </select>
           </div>
 
           {/* Password */}

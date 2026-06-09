@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   FaHome,
   FaShieldAlt,
@@ -15,8 +15,10 @@ import {
 
 const Home = () => {
 
-  const token = localStorage.getItem("token");
-
+  const navigate = useNavigate();
+  
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const [loading, setLoading] = useState(true);
 
   const [properties, setProperties] = useState([]);
@@ -37,10 +39,49 @@ const Home = () => {
     }
   };
 
+  
+   const handleLogout = async () => {
+    try {
+      await axios.post(
+        "http://localhost:5000/api/auth/logout",
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+
+      setUser(null);
+      navigate("/login");
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
   useEffect(() => {
-    fetchProperties();
-  },
-    []);
+  const checkAuth = async () => {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:5000/api/auth/me",
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (data.verified) {
+        setUser(data.user);
+      }
+    } catch (error) {
+      setUser(null);
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  checkAuth();
+}, []);
+  
 
   return (
 
@@ -62,16 +103,13 @@ const Home = () => {
           </div>
 
           <div className="flex gap-3">
-  {token ? (
-    <button
-      onClick={() => {
-        localStorage.removeItem("token");
-        navigate("/");
-      }}
-      className="px-5 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
-    >
-      Logout
-    </button>
+  {user ? (
+   <button
+  onClick={handleLogout}
+  className="px-5 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+>
+  Logout
+</button>
   ) : (
     <>
       <Link

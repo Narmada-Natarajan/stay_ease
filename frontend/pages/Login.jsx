@@ -38,15 +38,13 @@ const Login = () => {
           password: formData.password,
         },
         {
-          withCredentials:true
+          withCredentials: true
         }
       );
 
       if (data.success) {
         setError(false);
         setMessage(data.message || "Login Successful");
-
-        localStorage.setItem("token", data.token);
 
         setFormData({
           email: "",
@@ -83,8 +81,8 @@ const Login = () => {
         {message && (
           <div
             className={`mb-4 px-4 py-2 rounded-lg text-sm font-medium ${error
-                ? "bg-red-50 text-red-600 border border-red-200"
-                : "bg-green-50 text-green-600 border border-green-200"
+              ? "bg-red-50 text-red-600 border border-red-200"
+              : "bg-green-50 text-green-600 border border-green-200"
               }`}
           >
             {message}

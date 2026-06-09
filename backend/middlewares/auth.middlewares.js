@@ -3,7 +3,14 @@ import { User } from "../models/user.models.js";
 
 export const authMiddleware = async (req, res, next) => {
 
+    console.log("Auth Middleware Hit");
+
+    
     try {
+        
+        console.log("Cookies:", req.cookies);
+
+
         const token = req.cookies.token;
         if (!token) {
             return res.status(401).json({
@@ -11,8 +18,9 @@ export const authMiddleware = async (req, res, next) => {
                 message: "Unauthorized"
             });
         }
-
+        
         const decoded = jwt.verify(token, process.env.JWTKEY);
+        console.log(decoded);
 
 
 
