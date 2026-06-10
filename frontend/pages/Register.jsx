@@ -6,7 +6,7 @@ import {
   FaEye,
   FaEyeSlash,
   FaHome,
-  FaShieldAlt
+  FaShieldAlt,FaKey
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -249,6 +249,7 @@ return (
                   }`}
                 >
                   <div className="text-base font-semibold">
+                    <FaKey className="text-xl mb-1 mx-auto" />
                     Tenant
                   </div>
                 </button>
@@ -268,6 +269,7 @@ return (
                   }`}
                 >
                   <div className="text-base font-semibold">
+                    <FaHome className="text-xl mb-1 mx-auto" />
                     Owner
                   </div>
                 </button>
