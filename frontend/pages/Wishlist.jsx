@@ -41,6 +41,33 @@ const Wishlist = () => {
         }
 
     };
+    const removeFromWishlist = async (propertyId) => {
+
+        try {
+
+            await axios.post(
+                "http://localhost:5000/api/wishlist/toggle",
+                {
+                    propertyId,
+                },
+                {
+                    withCredentials: true,
+                }
+            );
+
+            setWishlist(
+                wishlist.filter(
+                    (item) => item.property._id !== propertyId
+                )
+            );
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+    };
 
     useEffect(() => {
 
@@ -64,12 +91,15 @@ const Wishlist = () => {
 
             <div className="max-w-7xl mx-auto">
 
+
                 <h1 className="flex items-center gap-3 text-4xl font-bold text-gray-800 mb-10">
                     <div className="bg-red-100 p-3 rounded-full">
                         <FaHeart className="text-red-500 text-2xl" />
                     </div>
+
                     <span>My Wishlist</span>
                 </h1>
+
 
                 {wishlist.length === 0 ? (
 
@@ -105,7 +135,15 @@ const Wishlist = () => {
                                                 {property.title}
                                             </h2>
 
-                                            <FaHeart className="text-red-500 text-xl" />
+
+                                            <button
+                                                onClick={() => removeFromWishlist(property._id)}
+                                                className="bg-red-50 p-3 rounded-full hover:bg-red-100 transition"
+                                            >
+                                                <FaHeart className="text-red-500 text-xl" />
+                                            </button>
+
+
 
                                         </div>
 
