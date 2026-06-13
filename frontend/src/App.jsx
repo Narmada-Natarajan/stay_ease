@@ -7,6 +7,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Home from "../pages/Home"
 import Login from "../pages/Login"
 import Register from "../pages/Register"
+import Wishlist from '../pages/Wishlist'
 import Protectedroute from '../context/Protectedroute'
 import Propertydetails from '../pages/Propertydetails'
 
@@ -24,6 +25,7 @@ function App() {
       <Route path="/login" element={<Login/>}/>
       <Route path="/register" element={<Register/>}/>
       <Route path="/property/:id" element={<Propertydetails />} />
+      <Route path="/wishlist" element={<Wishlist />} />
     </Routes>
     </BrowserRouter>
     

@@ -30,6 +30,7 @@ const Home = () => {
   const [searchType, setSearchType] = useState("");
   const [searchBudget, setSearchBudget] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
+  const [wishlistIds, setWishlistIds] = useState([]);
 
   const dropdownRef = useRef(null);
 
@@ -120,6 +121,62 @@ const Home = () => {
     );
 
   });
+
+  const fetchWishlist = async () => {
+
+    try {
+
+      const { data } = await axios.get(
+        "http://localhost:5000/api/wishlist/all",
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (data.success) {
+
+        setWishlistIds(
+          data.wishlist.map(
+            (item) => item.property._id
+          )
+        );
+
+      }
+
+    } catch (error) {
+
+      console.log(error);
+
+    }
+
+  };
+
+  const handleWishlist = async (propertyId) => {
+
+    try {
+
+      await axios.post(
+        "http://localhost:5000/api/wishlist/toggle",
+        {
+          propertyId,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      fetchWishlist();
+
+    } catch (error) {
+
+      console.log(error);
+
+    }
+
+  };
+
+
+
   useEffect(() => {
 
     const handleClickOutside = (event) => {
@@ -141,6 +198,7 @@ const Home = () => {
         handleClickOutside
       );
     };
+    fetchWishlist();
 
   }, []);
   return (
@@ -157,6 +215,7 @@ const Home = () => {
           </div>
           <div className="relative" ref={dropdownRef}>
 
+
             <button
               onClick={() => setShowDropdown(!showDropdown)}
               className="flex items-center gap-3 bg-white shadow-lg px-4 py-2 rounded-full hover:shadow-xl transition"
@@ -166,12 +225,10 @@ const Home = () => {
               <span className="font-medium text-gray-700">
                 {user?.name}
               </span>
-
-              <FaChevronDown
-                className={`text-gray-500 transition duration-300 ${showDropdown ? "rotate-180" : ""
-                  }`}
-              />
             </button>
+
+
+
 
             {showDropdown && (
 
@@ -376,9 +433,21 @@ const Home = () => {
                     }}
                   />
 
-                  <button className="absolute top-4 right-4 bg-white p-3 rounded-full shadow-md hover:text-red-500 transition">
-                    <FaHeart />
+
+                  <button
+                    onClick={() => handleWishlist(property._id)}
+                    className="absolute top-4 right-4 bg-white p-3 rounded-full shadow-md hover:text-red-500 transition"
+                  >
+                    <FaHeart
+                      className={
+                        wishlistIds.includes(property._id)
+                          ? "text-red-500"
+                          : "text-gray-500"
+                      }
+                    />
                   </button>
+
+
 
                   <div className="absolute bottom-4 left-4 bg-indigo-600 text-white px-3 py-1 rounded-full text-sm font-medium">
                     Featured

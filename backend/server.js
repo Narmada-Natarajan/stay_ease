@@ -2,6 +2,7 @@ import express from "express";
 import connectDB from "./config/db.config.js"
 import dotenv from "dotenv";
 import authRoutes from "./routers/auth.routers.js"
+import wishlistRoutes from "./routers/wishlist.routers.js";
 import cors  from "cors";
 import propertyRoutes from "./routers/property.routers.js"
 import cloudinary from "./config/cloudinary.config.js";
@@ -25,6 +26,7 @@ server.use(cookieParser());
 server.use(express.json());
 server.use("/api/auth",authRoutes);
 server.use("/api/property",propertyRoutes);
+server.use("/api/wishlist",wishlistRoutes);
 
 
 server.listen(PORT,()=>{
