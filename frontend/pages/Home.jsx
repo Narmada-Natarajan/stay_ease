@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -30,6 +30,8 @@ const Home = () => {
   const [searchType, setSearchType] = useState("");
   const [searchBudget, setSearchBudget] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
+
+  const dropdownRef = useRef(null);
 
   const [properties, setProperties] = useState([]);
 
@@ -118,6 +120,29 @@ const Home = () => {
     );
 
   });
+  useEffect(() => {
+
+    const handleClickOutside = (event) => {
+
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target)
+      ) {
+        setShowDropdown(false);
+      }
+
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener(
+        "mousedown",
+        handleClickOutside
+      );
+    };
+
+  }, []);
   return (
 
 
@@ -130,7 +155,7 @@ const Home = () => {
             <a href="#home">Home</a> <a href="#properties">Properties</a>
             <a href="#features">Features</a> <a href="#contact">Contact</a>
           </div>
-          <div className="relative">
+          <div className="relative" ref={dropdownRef}>
 
             <button
               onClick={() => setShowDropdown(!showDropdown)}
@@ -342,9 +367,13 @@ const Home = () => {
                 {/* Image */}
                 <div className="relative">
                   <img
-                    src={property.image}
+                    src={property.image?.[0]}
                     alt={property.title}
                     className="h-64 w-full object-cover"
+                    onError={(e) => {
+                      e.target.src =
+                        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c";
+                    }}
                   />
 
                   <button className="absolute top-4 right-4 bg-white p-3 rounded-full shadow-md hover:text-red-500 transition">

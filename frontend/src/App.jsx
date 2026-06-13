@@ -8,6 +8,7 @@ import Home from "../pages/Home"
 import Login from "../pages/Login"
 import Register from "../pages/Register"
 import Protectedroute from '../context/Protectedroute'
+import Propertydetails from '../pages/Propertydetails'
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
       </Route>
       <Route path="/login" element={<Login/>}/>
       <Route path="/register" element={<Register/>}/>
+      <Route path="/property/:id" element={<Propertydetails />} />
     </Routes>
     </BrowserRouter>
     
