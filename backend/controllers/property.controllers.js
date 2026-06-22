@@ -61,3 +61,31 @@ export const getPropertyById = async (req, res) => {
     }
 
 };
+
+export const getMyProperties = async (req, res) => {
+
+    try {
+
+        const properties = await Property.find({
+            owner: req.user._id
+        });
+
+        return res.status(200).json({
+
+            success: true,
+            properties
+
+        });
+
+    } catch (error) {
+
+        return res.status(500).json({
+
+            success: false,
+            message: error.message
+
+        });
+
+    }
+
+};

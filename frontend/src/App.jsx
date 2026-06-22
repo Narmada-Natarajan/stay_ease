@@ -10,6 +10,7 @@ import Register from "../pages/Register"
 import Wishlist from '../pages/Wishlist'
 import Protectedroute from '../context/Protectedroute'
 import Propertydetails from '../pages/Propertydetails'
+import MyProperties from "../pages/MyProperties";
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
       <Route path="/register" element={<Register/>}/>
       <Route path="/property/:id" element={<Propertydetails />} />
       <Route path="/wishlist" element={<Wishlist />} />
+      <Route path="/my-properties" element={<MyProperties />} />
     </Routes>
     </BrowserRouter>
     
