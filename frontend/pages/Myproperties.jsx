@@ -58,6 +58,38 @@ const MyProperties = () => {
 
   }
 
+  const handleDelete = async (id) => {
+
+    try {
+
+      await axios.delete(
+
+        `http://localhost:5000/api/property/delete/${id}`,
+
+        {
+          withCredentials: true
+        }
+
+      );
+
+      setProperties(
+        properties.filter(
+          property => property._id !== id
+        )
+      );
+
+    }
+
+    catch (error) {
+
+      console.log(error);
+
+    }
+
+  };
+
+
+
   return (
 
     <div className="bg-gray-100 min-h-screen py-10 px-6">
@@ -129,17 +161,24 @@ const MyProperties = () => {
                       <FaEye />
                     </Link>
 
-                    <button
-                      className="bg-yellow-500 text-white p-3 rounded-xl"
+
+                    <Link
+                      to={`/edit-property/${property._id}`}
+                      className="bg-indigo-600 text-white p-3 rounded-xl"
                     >
                       <FaEdit />
-                    </button>
+                    </Link>
+
+
 
                     <button
-                      className="bg-red-500 text-white p-3 rounded-xl"
+                      onClick={() => handleDelete(property._id)}
+                      className="bg-indigo-600 text-white p-3 rounded-xl"
                     >
                       <FaTrash />
                     </button>
+
+
 
                   </div>
 

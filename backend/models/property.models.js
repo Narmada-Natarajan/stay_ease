@@ -32,6 +32,17 @@ const PropertySchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  type: {
+    type: String,
+  },
+
+  furnishing: {
+    type: String,
+  },
+
+  amenities: {
+    type: [String],
+  },
 
   image: {
     type: [String],
@@ -42,7 +53,7 @@ const PropertySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  
+
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

@@ -1,6 +1,6 @@
 import express from "express";
 import { getProperties, getPropertyById, getMyProperties} from "../controllers/property.controllers.js";
-import { addProperty } from "../controllers/addproperty.controllers.js";
+import { addProperty,deleteProperty,editProperty } from "../controllers/addproperty.controllers.js";
 import upload from "../middlewares/multer.middlewares.js";
 import { authMiddleware } from "../middlewares/auth.middlewares.js";
 
@@ -13,8 +13,20 @@ router.get("/:id", getPropertyById);
 router.post(
   "/add",
   authMiddleware,
-  upload.single("image"),
+  upload.array("images"),
   addProperty
+);
+
+router.put(
+  "/edit/:id",
+  authMiddleware,
+  editProperty
+);
+
+router.delete(
+    "/delete/:id",
+    authMiddleware,
+    deleteProperty
 );
 
 export default router;

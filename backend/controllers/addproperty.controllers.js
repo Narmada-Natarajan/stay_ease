@@ -1,6 +1,7 @@
 import { Property } from "../models/property.models.js";
 import cloudinary from "../config/cloudinary.config.js";
 
+
 export const addProperty = async (req, res) => {
   try {
 
@@ -11,30 +12,34 @@ export const addProperty = async (req, res) => {
       });
     }
 
-    const {
-      title,
-      location,
-      price,
-      bedrooms,
-      bathrooms,
-      area,
-      description,
-    } = req.body;
+    const { title, location, price, bedrooms, bathrooms, area, description, type, furnishing, amenities, } = req.body;
 
-    const result = await cloudinary.uploader.upload(
-      req.file.path
-    );
+    const imageUrls = [];
+
+    for (const file of req.files) {
+
+      const result = await cloudinary.uploader.upload(
+        file.path
+      );
+
+      imageUrls.push(result.secure_url);
+
+    }
 
     const property = await Property.create({
-      title,
-      location,
-      price,
-      bedrooms,
-      bathrooms,
-      area,
-      description,
-      image: result.secure_url,
-      owner: req.user._id
+    title,
+    location,
+    price,
+    bedrooms,
+    bathrooms,
+    area,
+    description,
+    type,
+    furnishing,
+    amenities,
+    image: imageUrls,
+    owner: req.user._id
+
     });
 
     return res.status(201).json({
@@ -49,3 +54,67 @@ export const addProperty = async (req, res) => {
     });
   }
 };
+
+export const deleteProperty = async (req, res) => {
+
+    try {
+
+        await Property.findByIdAndDelete(
+            req.params.id
+        );
+
+        res.status(200).json({
+            success: true
+        });
+
+    }
+
+    catch (error) {
+
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+
+    }
+
+};
+
+export const editProperty = async (req, res) => {
+
+  try {
+
+    const property = await Property.findByIdAndUpdate(
+
+      req.params.id,
+
+      req.body,
+
+      {
+        new: true
+      }
+
+    );
+
+    res.status(200).json({
+
+      success: true,
+      property
+
+    });
+
+  }
+
+  catch (error) {
+
+    res.status(500).json({
+
+      success: false,
+      message: error.message
+
+    });
+
+  }
+
+};
+

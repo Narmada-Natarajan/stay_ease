@@ -10,7 +10,8 @@ import Register from "../pages/Register"
 import Wishlist from '../pages/Wishlist'
 import Protectedroute from '../context/Protectedroute'
 import Propertydetails from '../pages/Propertydetails'
-import MyProperties from "../pages/MyProperties";
+import Myproperties from "../pages/Myproperties";
+import Addproperty from "../pages/Addproperty"
 
 function App() {
 
@@ -18,19 +19,20 @@ function App() {
   return (
     <>
 
-    <BrowserRouter>
-    <Routes>
-      <Route element={<Protectedroute/>}>
-      <Route path="/" element={<Home/>}/>
-      </Route>
-      <Route path="/login" element={<Login/>}/>
-      <Route path="/register" element={<Register/>}/>
-      <Route path="/property/:id" element={<Propertydetails />} />
-      <Route path="/wishlist" element={<Wishlist />} />
-      <Route path="/my-properties" element={<MyProperties />} />
-    </Routes>
-    </BrowserRouter>
-    
+      <BrowserRouter>
+        <Routes>
+          <Route element={<Protectedroute />}>
+            <Route path="/" element={<Home />} />
+          </Route>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/property/:id" element={<Propertydetails />} />
+          <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/my-properties" element={<Myproperties />} />
+          <Route path="/add-property" element={<Addproperty />} />
+        </Routes>
+      </BrowserRouter>
+
     </>
   )
 }
