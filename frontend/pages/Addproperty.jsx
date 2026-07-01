@@ -1,6 +1,5 @@
-
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import {
     FaBuilding,
@@ -11,9 +10,11 @@ import {
 
 } from "react-icons/fa";
 
+
+
 const AddProperty = () => {
 
-
+    const { id } = useParams();
     const [formData, setFormData] = useState({
         title: "",
         location: "",
@@ -68,61 +69,127 @@ const AddProperty = () => {
 
     };
     const navigate = useNavigate();
+    useEffect(() => {
+
+        if (!id) return;
+
+        const fetchProperty = async () => {
+
+            try {
+
+                const { data } = await axios.get(
+
+                    `http://localhost:5000/api/property/${id}`
+
+                );
+
+                const property = data.property;
+
+                setFormData({
+
+                    title: property.title,
+                    location: property.location,
+                    price: property.price,
+                    type: property.type,
+                    bedrooms: property.bedrooms,
+                    bathrooms: property.bathrooms,
+                    area: property.area,
+                    furnishing: property.furnishing,
+                    amenities: property.amenities || [],
+                    description: property.description,
+
+                });
+
+            }
+
+            catch (error) {
+
+                console.log(error);
+
+            }
+
+        };
+
+        fetchProperty();
+
+    }, [id]);
+
+
     const handleSubmit = async () => {
 
-    try {
+        try {
 
-        const data = new FormData();
+            const data = new FormData();
 
-        Object.keys(formData).forEach((key) => {
+            Object.keys(formData).forEach((key) => {
 
-            if (key !== "amenities") {
+                if (key !== "amenities") {
 
-                data.append(key, formData[key]);
+                    data.append(key, formData[key]);
 
-            }
+                }
 
-        });
+            });
 
-        formData.amenities.forEach((amenity) => {
+            formData.amenities.forEach((amenity) => {
 
-            data.append("amenities", amenity);
+                data.append("amenities", amenity);
 
-        });
+            });
 
-        images.forEach((image) => {
+            images.forEach((image) => {
 
-            data.append("images", image);
+                data.append("images", image);
 
-        });
+            });
 
-        const res = await axios.post(
+            if (id) {
 
-            "http://localhost:5000/api/property/add",
+    await axios.put(
 
-            data,
+        `http://localhost:5000/api/property/edit/${id}`,
 
-            {
+        data,
 
-                withCredentials: true,
+        {
+            withCredentials: true,
+        }
 
-            }
+    );
 
-        );
+    alert("Property Updated Successfully!");
 
-        alert("Property Added Successfully!");
-        navigate("/my-properties");
+}
 
-    }
+else {
 
-    catch (error) {
+    await axios.post(
 
-        console.log(error);
+        "http://localhost:5000/api/property/add",
 
-    }
+        data,
 
-};
+        {
+            withCredentials: true,
+        }
 
+    );
+
+    alert("Property Added Successfully!");
+
+}
+
+                
+        }
+
+        catch (error) {
+
+            console.log(error);
+
+        }
+
+    };
+navigate("/my-properties");
 
 
     const propertyTypes = [
@@ -422,36 +489,36 @@ const AddProperty = () => {
                             >
 
                                 <input
-    type="checkbox"
-    checked={formData.amenities.includes(amenity)}
+                                    type="checkbox"
+                                    checked={formData.amenities.includes(amenity)}
 
-    onChange={() => {
+                                    onChange={() => {
 
-        if (formData.amenities.includes(amenity)) {
+                                        if (formData.amenities.includes(amenity)) {
 
-            setFormData({
-                ...formData,
-                amenities: formData.amenities.filter(
-                    item => item !== amenity
-                )
-            });
+                                            setFormData({
+                                                ...formData,
+                                                amenities: formData.amenities.filter(
+                                                    item => item !== amenity
+                                                )
+                                            });
 
-        }
+                                        }
 
-        else {
+                                        else {
 
-            setFormData({
-                ...formData,
-                amenities: [
-                    ...formData.amenities,
-                    amenity
-                ]
-            });
+                                            setFormData({
+                                                ...formData,
+                                                amenities: [
+                                                    ...formData.amenities,
+                                                    amenity
+                                                ]
+                                            });
 
-        }
+                                        }
 
-    }}
-/>
+                                    }}
+                                />
                                 {amenity}
 
                             </label>
@@ -461,22 +528,22 @@ const AddProperty = () => {
                     </div>
 
                 </div>
-<div className="bg-white rounded-[35px] shadow-xl p-8 mt-8">
+                <div className="bg-white rounded-[35px] shadow-xl p-8 mt-8">
 
-    <h2 className="text-3xl font-bold text-gray-800 mb-8">
-        Description
-    </h2>
+                    <h2 className="text-3xl font-bold text-gray-800 mb-8">
+                        Description
+                    </h2>
 
-    <textarea
-        rows="6"
-        name="description"
-        value={formData.description}
-        onChange={handleChange}
-        placeholder="Describe your property..."
-        className="w-full p-6 rounded-3xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500"
-    />
+                    <textarea
+                        rows="6"
+                        name="description"
+                        value={formData.description}
+                        onChange={handleChange}
+                        placeholder="Describe your property..."
+                        className="w-full p-6 rounded-3xl border border-gray-200 outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
 
-</div>
+                </div>
 
                 <div className="bg-white rounded-[35px] shadow-xl p-10 mt-8">
 
@@ -538,16 +605,16 @@ const AddProperty = () => {
                                         className="relative group"
                                     >
                                         {
-index===0 && (
+                                            index === 0 && (
 
-<div className="absolute top-3 left-3 bg-indigo-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                                <div className="absolute top-3 left-3 bg-indigo-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
 
-    Cover Image
+                                                    Cover Image
 
-</div>
+                                                </div>
 
-)
-}
+                                            )
+                                        }
 
                                         <img
                                             src={URL.createObjectURL(image)}
@@ -574,32 +641,32 @@ index===0 && (
                                 ))}
 
                             </div>
-                           
+
 
                         </div>
-                        
+
 
                     )}
 
 
                 </div>
-                 <div className="mt-10">
+                <div className="mt-10">
 
-    <button
-    onClick={handleSubmit}
-        className="w-full py-5 rounded-[30px]
+                    <button
+                        onClick={handleSubmit}
+                        className="w-full py-5 rounded-[30px]
         bg-linear-to-r from-indigo-600 to-purple-600
         text-white text-xl font-semibold
         shadow-xl hover:shadow-2xl
         hover:scale-[1.02]
         transition duration-300"
-    >
+                    >
 
-        Save Property
+                        {id ? "Update Property" : "Save Property"}
 
-    </button>
+                    </button>
 
-</div>
+                </div>
 
 
 
@@ -608,7 +675,7 @@ index===0 && (
 
 
             </div>
-           
+
 
         </div>
 

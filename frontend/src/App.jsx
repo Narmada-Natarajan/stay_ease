@@ -30,6 +30,7 @@ function App() {
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/my-properties" element={<Myproperties />} />
           <Route path="/add-property" element={<Addproperty />} />
+          <Route path="/add-property/:id" element={<Addproperty />} />
         </Routes>
       </BrowserRouter>
 

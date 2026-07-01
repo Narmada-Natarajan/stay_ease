@@ -16,17 +16,17 @@ router.post(
   upload.array("images"),
   addProperty
 );
-
-router.put(
-  "/edit/:id",
-  authMiddleware,
-  editProperty
-);
-
 router.delete(
     "/delete/:id",
     authMiddleware,
     deleteProperty
+);
+
+router.put(
+  "/edit/:id",
+  authMiddleware,
+  upload.array("images"),
+  editProperty
 );
 
 export default router;
