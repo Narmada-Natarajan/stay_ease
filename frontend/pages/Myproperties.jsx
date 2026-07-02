@@ -162,7 +162,8 @@ const MyProperties = () => {
                     </Link>
 
 
-                    <Link to={`/add-property/${property._id}`}>
+                    <Link to={`/add-property/${property._id}`}
+                    className="bg-indigo-600 text-white p-3 rounded-xl">
                       <FaEdit />
                     </Link>
 
